@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3 – I Care | Grade 9</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Heebo:wght@400;500;700&display=swap');
+  :root {
+    --teal:#2ec4b6; --teal-dark:#1a9e91;
+    --coral:#ff6b6b; --coral-dark:#e05555;
+    --amber:#ffb347; --purple:#7c5cbf;
+    --green:#43aa8b;
+    --bg:#f9f6f0; --card:#ffffff;
+    --text:#2d2d2d; --muted:#7a7a7a;
+    --border:#e0dbd0; --correct:#43aa8b; --wrong:#ff6b6b; --locked:#bbb;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Nunito','Heebo',sans-serif;background:var(--bg);color:var(--text);min-height:100vh;}
+
+  header{background:linear-gradient(135deg,var(--teal) 0%,var(--purple) 100%);color:white;padding:18px 24px 14px;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;box-shadow:0 4px 18px rgba(44,196,182,.25);position:sticky;top:0;z-index:200;}
+  .header-title{font-size:1.35rem;font-weight:900;letter-spacing:.5px;}
+  .header-sub{font-size:.82rem;opacity:.85;font-weight:600;}
+  #score-bar{background:rgba(255,255,255,.18);border:2px solid rgba(255,255,255,.4);border-radius:30px;padding:6px 18px;font-size:.9rem;font-weight:800;color:white;display:flex;align-items:center;gap:8px;white-space:nowrap;}
+  #score-bar .score-num{font-size:1.25rem;color:var(--amber);text-shadow:0 1px 3px rgba(0,0,0,.2);}
+  #score-bar .score-denom{opacity:.75;font-size:.85rem;}
+
+  .tabs-nav{display:flex;overflow-x:auto;background:white;border-bottom:3px solid var(--border);padding:0 16px;gap:4px;scrollbar-width:none;position:sticky;top:66px;z-index:150;}
+  .tabs-nav::-webkit-scrollbar{display:none;}
+  .tab-btn{flex-shrink:0;padding:13px 20px 10px;border:none;background:transparent;cursor:pointer;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:700;color:var(--muted);border-bottom:3px solid transparent;margin-bottom:-3px;transition:all .2s;white-space:nowrap;}
+  .tab-btn:hover{color:var(--teal);}
+  .tab-btn.active{color:var(--teal-dark);border-bottom-color:var(--teal);}
+
+  .tab-content{display:none;padding:28px 20px 60px;max-width:860px;margin:0 auto;}
+  .tab-content.active{display:block;}
+
+  /* Hebrew instruction block */
+  .he-instr{background:#fdf6e8;border:1.5px solid var(--amber);border-radius:10px;padding:10px 16px;margin-bottom:14px;font-size:.87rem;color:#5a3e00;direction:rtl;text-align:right;font-family:'Heebo',sans-serif;line-height:1.6;}
+  .he-instr strong{font-weight:700;}
+
+  /* Section labels */
+  .section-label{display:inline-flex;align-items:center;gap:8px;background:var(--teal);color:white;border-radius:8px 8px 0 0;padding:7px 16px;font-size:.85rem;font-weight:800;letter-spacing:.5px;text-transform:uppercase;margin-bottom:0;}
+  .section-label.coral{background:var(--coral);}
+  .section-label.amber{background:var(--amber);color:#4a3200;}
+  .section-label.purple{background:var(--purple);}
+  .section-label.green{background:var(--green);}
+
+  .card{background:var(--card);border-radius:0 12px 12px 12px;border:2px solid var(--border);padding:22px;margin-bottom:28px;box-shadow:0 2px 12px rgba(0,0,0,.05);}
+
+  /* Reading box */
+  .reading-box{background:#fffdf5;border:2px solid var(--amber);border-radius:12px;padding:20px 24px;margin-bottom:22px;}
+  .reading-box h3{text-align:center;font-size:1.1rem;font-weight:900;letter-spacing:1px;text-transform:uppercase;border-bottom:2px solid var(--amber);padding-bottom:8px;margin-bottom:8px;color:#4a3200;}
+  .reading-box .part-title{text-align:center;font-weight:700;font-size:.9rem;margin-bottom:14px;color:var(--muted);}
+  .reading-box p{font-size:.97rem;line-height:1.85;margin-bottom:12px;}
+  .reading-box p:last-child{margin-bottom:0;}
+
+  /* ── HOVER TOOLTIP GLOSSARY ── */
+  .gloss{position:relative;display:inline;cursor:help;border-bottom:2px dotted var(--teal);color:var(--teal-dark);font-weight:700;white-space:nowrap;}
+  .gloss::after{content:attr(data-tip);position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%) translateY(4px);background:#1a2a3a;color:#fff;font-size:.8rem;font-family:'Heebo','Nunito',sans-serif;font-weight:500;white-space:nowrap;padding:6px 12px;border-radius:8px;box-shadow:0 4px 16px rgba(0,0,0,.3);pointer-events:none;opacity:0;transition:opacity .18s,transform .18s;z-index:9999;direction:rtl;text-align:center;line-height:1.5;}
+  .gloss::before{content:'';position:absolute;bottom:calc(100% + 2px);left:50%;transform:translateX(-50%);border:5px solid transparent;border-top-color:#1a2a3a;pointer-events:none;opacity:0;transition:opacity .18s;z-index:9999;}
+  .gloss:hover::after{opacity:1;transform:translateX(-50%) translateY(0);}
+  .gloss:hover::before{opacity:1;}
+
+  /* Dialogue */
+  .dialogue-box{border-radius:10px;padding:16px 18px;margin-bottom:14px;font-size:.93rem;line-height:1.7;}
+  .dialogue-box.blue{background:#e8f4ff;border-left:4px solid #5ba4e0;}
+  .dialogue-box.pink{background:#fff0f5;border-left:4px solid #e07aaa;}
+  .dialogue-box .speaker{font-weight:800;font-style:italic;margin-right:6px;}
+  .dialogue-box .speaker.guy{color:#2a6ab0;}
+  .dialogue-box .speaker.mother{color:#2a9668;}
+  .dialogue-box .speaker.betty{color:#2a6ab0;}
+  .dialogue-box .speaker.sue{color:#9b2a8a;}
+
+  .tip-box{background:#f0f9ff;border:1.5px solid #aaddff;border-radius:10px;padding:14px 18px;font-size:.87rem;margin-bottom:18px;color:#1a4a6a;}
+  .tip-box strong{display:block;margin-bottom:4px;color:var(--teal-dark);}
+  .think-box{background:#fff8e8;border:2px solid var(--amber);border-radius:10px;padding:14px 20px;margin-bottom:18px;font-size:.92rem;line-height:1.7;}
+
+  /* Questions */
+  .question-block{margin-bottom:20px;}
+  .question-text{font-weight:700;margin-bottom:8px;font-size:.95rem;display:flex;gap:8px;align-items:flex-start;}
+  .question-num{background:var(--teal);color:white;width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:900;flex-shrink:0;margin-top:1px;}
+  .question-num.coral{background:var(--coral);}
+  .question-num.amber{background:var(--amber);color:#4a3200;}
+  .question-num.green{background:var(--green);}
+
+  textarea.answer-field{width:100%;border:2px solid var(--border);border-radius:8px;padding:10px 12px;font-family:'Nunito',sans-serif;font-size:.92rem;resize:vertical;min-height:60px;transition:border .2s;background:#fafafa;}
+  textarea.answer-field:focus{outline:none;border-color:var(--teal);background:white;}
+  textarea.answer-field:disabled{background:#f0f0f0;color:#888;cursor:not-allowed;}
+
+  /* Buttons */
+  .check-btn{background:var(--teal);color:white;border:none;border-radius:8px;padding:8px 18px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.85rem;cursor:pointer;margin-top:8px;transition:background .18s,transform .1s;}
+  .check-btn:hover:not(:disabled){background:var(--teal-dark);transform:translateY(-1px);}
+  .check-btn:disabled{background:var(--locked);cursor:not-allowed;}
+  .check-btn.coral{background:var(--coral);}
+  .check-btn.coral:hover:not(:disabled){background:var(--coral-dark);}
+  .check-btn.amber{background:var(--amber);color:#4a3200;}
+  .check-btn.purple{background:var(--purple);}
+  .check-btn.green{background:var(--green);}
+  .reset-btn{background:white;color:var(--muted);border:2px solid var(--border);border-radius:8px;padding:7px 16px;font-family:'Nunito',sans-serif;font-weight:700;font-size:.82rem;cursor:pointer;transition:all .18s;display:flex;align-items:center;gap:5px;}
+  .reset-btn:hover{border-color:var(--coral);color:var(--coral);}
+  .tab-actions{display:flex;justify-content:flex-end;margin-bottom:20px;}
+
+  /* Feedback */
+  .feedback{font-size:.82rem;font-weight:700;margin-top:5px;padding:5px 10px;border-radius:6px;display:none;}
+  .feedback.correct{display:block;background:#e8f7f0;color:var(--correct);}
+  .feedback.wrong{display:block;background:#fff0f0;color:var(--wrong);}
+  .feedback.warning{display:block;background:#fff8e8;color:#b07a00;}
+  .attempt-indicator{font-size:.75rem;color:var(--muted);margin-top:3px;}
+  .attempt-indicator span{color:var(--coral);font-weight:700;}
+
+  /* MC */
+  .mc-options{display:flex;flex-direction:column;gap:10px;margin-top:10px;}
+  .mc-option{display:flex;align-items:flex-start;gap:10px;padding:11px 14px;border:2px solid var(--border);border-radius:9px;cursor:pointer;transition:all .18s;background:white;font-size:.92rem;font-weight:600;}
+  .mc-option:hover:not(.locked){border-color:var(--teal);background:#f0fdfb;}
+  .mc-option input[type="radio"]{flex-shrink:0;margin-top:2px;accent-color:var(--teal);}
+  .mc-option.selected{border-color:var(--teal);background:#e8fdfb;}
+  .mc-option.correct-ans{border-color:var(--correct);background:#e8f7f0;color:var(--correct);}
+  .mc-option.wrong-ans{border-color:var(--wrong);background:#fff0f0;color:var(--wrong);}
+  .mc-option.locked{cursor:not-allowed;}
+
+  /* Match */
+  .match-row{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap;}
+  .match-left{flex:1;min-width:180px;background:#f5f5f5;border:2px solid var(--border);border-radius:8px;padding:9px 13px;font-size:.9rem;font-weight:600;}
+  .match-arrow{color:var(--muted);font-size:1.1rem;}
+  .match-right{flex:1;min-width:160px;}
+  select.match-select{border:2px solid var(--border);border-radius:7px;padding:8px 10px;font-family:'Nunito',sans-serif;font-size:.88rem;font-weight:600;width:100%;background:white;cursor:pointer;transition:border .18s;}
+  select.match-select:focus{outline:none;border-color:var(--teal);}
+  select.match-select:disabled{background:#f0f0f0;cursor:not-allowed;}
+
+  /* Translate */
+  .translate-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px 24px;}
+  @media(max-width:550px){.translate-grid{grid-template-columns:1fr;}}
+  .translate-row{display:flex;align-items:center;gap:8px;font-size:.91rem;}
+  .translate-row .num{font-weight:800;color:var(--teal-dark);min-width:22px;}
+  .translate-row .word-he{color:var(--muted);font-style:italic;font-size:.82rem;white-space:nowrap;direction:rtl;}
+  .translate-row input{flex:1;border:2px solid var(--border);border-radius:7px;padding:7px 10px;font-family:'Nunito',sans-serif;font-size:.88rem;background:#fafafa;transition:border .18s;}
+  .translate-row input:focus{outline:none;border-color:var(--teal);background:white;}
+  .translate-row input:disabled{background:#f0f0f0;cursor:not-allowed;}
+
+  /* Word bank */
+  .word-bank{background:#f0f9ff;border:2px solid #aaddff;border-radius:10px;padding:12px 16px;margin-bottom:18px;}
+  .word-bank-title{font-size:.8rem;font-weight:800;text-transform:uppercase;color:#1a4a6a;margin-bottom:8px;letter-spacing:.5px;}
+  .word-bank-items{display:flex;flex-wrap:wrap;gap:7px;}
+  .word-chip{background:white;border:1.5px solid #aaddff;border-radius:20px;padding:4px 12px;font-size:.83rem;font-weight:700;color:#1a4a6a;}
+
+  /* Fill sentence */
+  .fill-sentence{font-size:.93rem;line-height:1.8;margin-bottom:10px;display:flex;align-items:center;flex-wrap:wrap;gap:4px;font-weight:600;}
+  .fill-sentence input{border:none;border-bottom:2px solid var(--teal);padding:2px 6px;font-family:'Nunito',sans-serif;font-size:.93rem;font-weight:600;width:160px;background:transparent;text-align:center;transition:border .18s;}
+  .fill-sentence input:focus{outline:none;border-bottom-color:var(--purple);}
+  .fill-sentence input:disabled{cursor:not-allowed;color:#888;}
+  .fill-sentence .num{font-weight:800;color:var(--teal-dark);margin-right:4px;}
+
+  /* Circle word */
+  .circle-sentence{margin-bottom:14px;font-size:.93rem;font-weight:600;line-height:1.8;}
+  .circle-sentence .num{font-weight:800;color:var(--teal-dark);margin-right:4px;}
+  .word-choice{display:inline-block;padding:2px 10px;border-radius:20px;cursor:pointer;border:2px solid transparent;font-weight:700;transition:all .18s;margin:0 2px;}
+  .word-choice:hover:not(.locked){background:#e8fdfb;border-color:var(--teal);}
+  .word-choice.selected{background:#e8fdfb;border-color:var(--teal);}
+  .word-choice.correct-choice{background:#e8f7f0;border-color:var(--correct);color:var(--correct);}
+  .word-choice.wrong-choice{background:#fff0f0;border-color:var(--wrong);color:var(--wrong);text-decoration:line-through;}
+  .word-choice.locked{cursor:not-allowed;}
+
+  /* Answer revealed */
+  .answer-shown{background:#fff8e8;border:1.5px dashed var(--amber);border-radius:6px;padding:5px 10px;font-size:.82rem;font-weight:700;color:#7a5200;margin-top:5px;display:none;}
+  .answer-shown.show{display:block;}
+
+  /* Tab page title */
+  .tab-page-title{display:flex;align-items:center;gap:12px;margin-bottom:24px;}
+  .tab-page-title .icon-circle{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:1.4rem;flex-shrink:0;}
+  .tab-page-title h2{font-size:1.25rem;font-weight:900;color:var(--text);}
+  .tab-page-title p{font-size:.85rem;color:var(--muted);margin-top:2px;}
+
+  /* HW Tasks */
+  .hw-task{background:white;border:2px solid var(--border);border-radius:14px;padding:22px;margin-bottom:20px;position:relative;transition:box-shadow .2s;}
+  .hw-task:hover{box-shadow:0 4px 20px rgba(0,0,0,.08);}
+  .hw-task-num{position:absolute;top:-14px;left:20px;background:var(--teal);color:white;font-size:.8rem;font-weight:800;padding:4px 14px;border-radius:20px;letter-spacing:.5px;text-transform:uppercase;}
+  .hw-task-num.coral{background:var(--coral);}
+  .hw-task h3{font-size:1rem;font-weight:800;margin-bottom:10px;}
+  .hw-task p{font-size:.9rem;line-height:1.7;color:#444;}
+  .hw-task p+p{margin-top:6px;}
+  .hw-badge{display:inline-flex;align-items:center;gap:5px;background:#fff8e8;border:1.5px solid var(--amber);color:#7a5200;font-size:.78rem;font-weight:700;border-radius:20px;padding:3px 12px;margin-bottom:10px;}
+  .or-divider{text-align:center;font-size:.9rem;font-weight:800;color:var(--muted);margin:8px 0;letter-spacing:2px;}
+
+  /* Submit form */
+  .submit-section{background:white;border:2px solid var(--teal);border-radius:14px;padding:22px;margin-top:10px;}
+  .submit-section h3{font-size:1rem;font-weight:800;margin-bottom:6px;color:var(--teal-dark);}
+  .submit-section .sub-desc{font-size:.88rem;color:#444;margin-bottom:12px;line-height:1.6;}
+  .submit-section .he-note{direction:rtl;font-family:'Heebo',sans-serif;font-size:.85rem;color:#5a3e00;background:#fdf6e8;border-radius:8px;padding:8px 12px;margin-bottom:16px;}
+  .form-row{margin-bottom:12px;}
+  .form-row label{display:block;font-size:.82rem;font-weight:700;margin-bottom:4px;color:var(--muted);}
+  .form-row input,.form-row textarea,.form-row select{width:100%;border:2px solid var(--border);border-radius:8px;padding:9px 12px;font-family:'Nunito',sans-serif;font-size:.9rem;background:#fafafa;transition:border .18s;}
+  .form-row input:focus,.form-row textarea:focus,.form-row select:focus{outline:none;border-color:var(--teal);background:white;}
+  .form-row textarea{min-height:100px;resize:vertical;}
+  .send-btn{background:linear-gradient(135deg,var(--teal),var(--purple));color:white;border:none;border-radius:10px;padding:11px 28px;font-family:'Nunito',sans-serif;font-weight:800;font-size:.95rem;cursor:pointer;transition:opacity .18s,transform .1s;display:inline-flex;align-items:center;gap:8px;}
+  .send-btn:hover{opacity:.9;transform:translateY(-1px);}
+  .send-success{background:#e8f7f0;border:1.5px solid var(--correct);border-radius:8px;padding:10px 16px;font-size:.88rem;font-weight:700;color:var(--correct);margin-top:12px;display:none;}
+  .send-success.show{display:block;}
+</style>
+</head>
+<body>
+
+<header>
+  <div>
+    <div class="header-title">📚 Unit 3 – I Care</div>
+    <div class="header-sub">כיתה ט &nbsp;|&nbsp; Grade 9 Workbook</div>
+  </div>
+  <div id="score-bar">⭐ ציון: <span class="score-num" id="total-score">0</span><span class="score-denom"> / 100</span></div>
+</header>
+
+<div class="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('tab-reading1',this)">📖 Reading 1</button>
+  <button class="tab-btn" onclick="switchTab('tab-vocab',this)">🔤 Vocabulary</button>
+  <button class="tab-btn" onclick="switchTab('tab-reading2',this)">🐦 Reading 2</button>
+  <button class="tab-btn" onclick="switchTab('tab-hw',this)">🏠 Digital Tasks</button>
+</div>
+
+<!-- ═══════════ TAB 1 – READING 1 ═══════════ -->
+<div class="tab-content active" id="tab-reading1">
+  <div class="tab-page-title">
+    <div class="icon-circle" style="background:#e8fdfb;">🕯️</div>
+    <div><h2>A Light in the Dark</h2><p>Read the story and answer the questions.</p></div>
+  </div>
+  <div class="tab-actions"><button class="reset-btn" onclick="resetTab('tab-reading1')">↺ איפוס טאב זה</button></div>
+
+  <div class="tip-box">
+    <strong>💡 Reading Tip</strong>
+    Read the questions before you read the story — they will help you understand the text.<br>
+    <span style="direction:rtl;display:block;margin-top:5px;font-family:'Heebo',sans-serif;font-size:.85rem;color:#1a4a6a;">
+      טיפ לקריאה: קראו קודם את השאלות — הן יעזרו לכם להבין את הטקסט.
+    </span>
+  </div>
+
+  <div class="reading-box">
+    <h3>A Light in the Dark</h3>
+    <div class="part-title">Part One</div>
+    <p>It was a dark night. A young man named Jason was walking <span class="gloss" data-tip="לאורך שביל">along a path</span>. He wanted to get to a village, but it was hard for him to find his way in the dark.</p>
+    <p>Suddenly, he saw a light in the dark. A man with a <span class="gloss" data-tip="לפיד">torch</span> was coming <span class="gloss" data-tip="לקראתו">toward him</span>. Jason decided to wait for the man with the torch. "Maybe he'll agree to take me to the village," he said to himself.</p>
+    <p>Jason waited for the man, but the man was walking very slowly. Jason saw that he had a <span class="gloss" data-tip="מקל הליכה">cane</span>.</p>
+  </div>
+
+  <div class="he-instr"><strong>✏️ ענו על השאלות על חלק א׳ של הטקסט.</strong> כתבו משפט מלא בלשון עבר. כאשר השאלה מכילה <em>did</em> — זה סימן שצריך להשתמש בפועל בעבר בתשובה.</div>
+  <div class="section-label">✏️ Part One – Questions</div>
+  <div class="card">
+    <div id="r1q1" class="question-block">
+      <div class="question-text"><span class="question-num">1</span>What was Jason's problem?</div>
+      <textarea class="answer-field" id="r1q1-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q1-att">2</span></div>
+      <button class="check-btn" onclick="checkOpen('r1q1','hard to find|hard for him|couldn\'t find|could not find|dark|find his way',1)">Check ✓</button>
+      <div class="feedback" id="r1q1-fb"></div>
+      <div class="answer-shown" id="r1q1-show">✅ It was hard for him to find his way in the dark.</div>
+    </div>
+    <div id="r1q2" class="question-block">
+      <div class="question-text"><span class="question-num">2</span>What did he suddenly see?</div>
+      <textarea class="answer-field" id="r1q2-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q2-att">2</span></div>
+      <button class="check-btn" onclick="checkOpen('r1q2','light|torch|man with a torch|man with torch',1)">Check ✓</button>
+      <div class="feedback" id="r1q2-fb"></div>
+      <div class="answer-shown" id="r1q2-show">✅ He suddenly saw a light / a man with a torch.</div>
+    </div>
+    <div id="r1q3" class="question-block">
+      <div class="question-text"><span class="question-num">3</span>What did the man have?</div>
+      <textarea class="answer-field" id="r1q3-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q3-att">2</span></div>
+      <button class="check-btn" onclick="checkOpen('r1q3','torch|cane',1)">Check ✓</button>
+      <div class="feedback" id="r1q3-fb"></div>
+      <div class="answer-shown" id="r1q3-show">✅ The man had a torch and a cane.</div>
+    </div>
+    <div id="r1q4" class="question-block">
+      <div class="question-text"><span class="question-num">4</span>What did Jason decide to do?</div>
+      <textarea class="answer-field" id="r1q4-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q4-att">2</span></div>
+      <button class="check-btn" onclick="checkOpen('r1q4','wait|decided to wait',1)">Check ✓</button>
+      <div class="feedback" id="r1q4-fb"></div>
+      <div class="answer-shown" id="r1q4-show">✅ Jason decided to wait for the man with the torch.</div>
+    </div>
+    <div id="r1q5" class="question-block">
+      <div class="question-text"><span class="question-num">5</span>What helped the man walk?</div>
+      <textarea class="answer-field" id="r1q5-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q5-att">2</span></div>
+      <button class="check-btn" onclick="checkOpen('r1q5','cane|a cane',1)">Check ✓</button>
+      <div class="feedback" id="r1q5-fb"></div>
+      <div class="answer-shown" id="r1q5-show">✅ A cane helped him walk.</div>
+    </div>
+  </div>
+
+  <div class="tip-box">
+    <strong>📘 Language Tip</strong>
+    The word <em>did</em> in a question points to the past. Use past tense verbs in your answers.<br>
+    <span style="direction:rtl;display:block;margin-top:5px;font-family:'Heebo',sans-serif;font-size:.85rem;color:#1a4a6a;">
+      פועל העזר <em>did</em> בשאלה = שאלה בעבר. השתמשו בפועל בעבר בתשובה.<br>
+      דוגמה: <em>What did the man <strong>have</strong>? → The man <strong>had</strong>...</em>
+    </span>
+  </div>
+
+  <div class="reading-box">
+    <h3>A Light in the Dark</h3>
+    <div class="part-title">Part Two</div>
+    <p>"Good evening," the man said. "Come with me. I'll take you to the village."</p>
+    <p>"It took you a long time to get here," Jason said.</p>
+    <p>"Sorry, but as you see, I'm <span class="gloss" data-tip="עיוור">blind</span>. This is why I walk slowly."</p>
+    <p>"Blind? Are you blind? Then what do you need this torch for?" Jason asked and laughed. "A blind man doesn't need a torch."</p>
+    <p>"My torch is not for me. It's for people who <em>can</em> see. My torch is for people <span class="gloss" data-tip="כמוך">like you</span> who cannot find their way in the dark. I know how you feel when you cannot see. It is important for me to help others."</p>
+    <p>That day, Jason learned an important lesson. He learned to <span class="gloss" data-tip="לשים את עצמו בנעליים של אחרים">put himself in other people's shoes</span> and try to understand their needs and feelings.</p>
+  </div>
+
+  <div class="he-instr"><strong>✏️ ענו על שאלות חלק ב׳.</strong> זכרו להשתמש בפועל בלשון עבר בכל תשובה.</div>
+  <div class="section-label coral">✏️ Part Two – Questions</div>
+  <div class="card">
+    <div id="r1q6" class="question-block">
+      <div class="question-text"><span class="question-num coral">1</span>What did the man offer Jason?</div>
+      <textarea class="answer-field" id="r1q6-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q6-att">2</span></div>
+      <button class="check-btn coral" onclick="checkOpen('r1q6','take him|to the village|offered|take jason',1)">Check ✓</button>
+      <div class="feedback" id="r1q6-fb"></div>
+      <div class="answer-shown" id="r1q6-show">✅ The man offered to take Jason to the village.</div>
+    </div>
+    <div id="r1q7" class="question-block">
+      <div class="question-text"><span class="question-num coral">2</span>Why did the man walk slowly?</div>
+      <textarea class="answer-field" id="r1q7-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q7-att">2</span></div>
+      <button class="check-btn coral" onclick="checkOpen('r1q7','blind|he was blind|because he was blind',1)">Check ✓</button>
+      <div class="feedback" id="r1q7-fb"></div>
+      <div class="answer-shown" id="r1q7-show">✅ He walked slowly because he was blind.</div>
+    </div>
+    <div id="r1q8" class="question-block">
+      <div class="question-text"><span class="question-num coral">3</span>Why did Jason laugh?</div>
+      <textarea class="answer-field" id="r1q8-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q8-att">2</span></div>
+      <button class="check-btn coral" onclick="checkOpen('r1q8','blind man|doesn\'t need|torch|blind doesn\'t',1)">Check ✓</button>
+      <div class="feedback" id="r1q8-fb"></div>
+      <div class="answer-shown" id="r1q8-show">✅ He laughed because a blind man doesn't need a torch.</div>
+    </div>
+    <div id="r1q9" class="question-block">
+      <div class="question-text"><span class="question-num coral">4</span>Who was the torch for?</div>
+      <textarea class="answer-field" id="r1q9-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q9-att">2</span></div>
+      <button class="check-btn coral" onclick="checkOpen('r1q9','people who can see|others|who cannot find|people like',1)">Check ✓</button>
+      <div class="feedback" id="r1q9-fb"></div>
+      <div class="answer-shown" id="r1q9-show">✅ The torch was for people who can see but cannot find their way in the dark.</div>
+    </div>
+    <div id="r1q10" class="question-block">
+      <div class="question-text"><span class="question-num coral">5</span>What did Jason learn that day?</div>
+      <textarea class="answer-field" id="r1q10-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q10-att">2</span></div>
+      <button class="check-btn coral" onclick="checkOpen('r1q10','put himself|other people|shoes|understand|needs and feelings|empathy',1)">Check ✓</button>
+      <div class="feedback" id="r1q10-fb"></div>
+      <div class="answer-shown" id="r1q10-show">✅ Jason learned to put himself in other people's shoes and understand their needs and feelings.</div>
+    </div>
+  </div>
+
+  <div class="he-instr"><strong>💭 קראו את שני הדיאלוגים.</strong> מי הוא/היא אדם מסוג "YOU" — Guy או Sue? הסבירו את תשובתכם בכתב.</div>
+  <div class="section-label amber">💭 Think About It – "I" People vs "YOU" People</div>
+  <div class="card">
+    <div class="think-box">
+      There are two <span class="gloss" data-tip="סוגים של">kinds of</span> people – <strong>"I"</strong> people and <strong>"YOU"</strong> people.<br>
+      <strong>"I" people</strong> say: "I want..." / "I need..." / "I feel..."<br>
+      <strong>"YOU" people</strong> say: "What do <strong>you</strong> want?" / "What do <strong>you</strong> need?" / "How do <strong>you</strong> feel?"
+    </div>
+    <p style="font-weight:700;margin-bottom:14px;">Who is a "YOU" person — Guy or Sue? Explain your answer.</p>
+    <div class="dialogue-box blue">
+      <div><span class="speaker guy">Guy:</span> Mom, I need a new smartphone.</div>
+      <div><span class="speaker mother">Mother:</span> I know, but we can't afford it now. I hope you understand.</div>
+      <div><span class="speaker guy">Guy:</span> I don't want to understand. I want a new smartphone. Why don't you <span class="gloss" data-tip="ללוות">borrow</span> some money from Grandma?</div>
+    </div>
+    <div class="dialogue-box pink">
+      <div><span class="speaker betty">Betty:</span> My family and I are going to Eilat for the weekend. Come with us!</div>
+      <div><span class="speaker sue">Sue:</span> I can't. You know that my little brother is a child with special needs. He needs me. And my mom needs my help. She can't take care of him all by herself.</div>
+    </div>
+    <div id="r1q11" class="question-block" style="margin-top:16px;">
+      <div class="question-text"><span class="question-num amber">D</span>Who is the "YOU" person — Guy or Sue? Explain.</div>
+      <textarea class="answer-field" id="r1q11-ans" placeholder="Write your answer here..." rows="3"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r1q11-att">2</span></div>
+      <button class="check-btn amber" onclick="checkOpen('r1q11','sue|sue is the you|sue thinks|sue cares|sue helps',1)">Check ✓</button>
+      <div class="feedback" id="r1q11-fb"></div>
+      <div class="answer-shown" id="r1q11-show">✅ Sue is the "YOU" person. She thinks about others and cares about their needs.</div>
+    </div>
+  </div>
+</div><!-- end tab-reading1 -->
+
+
+<!-- ═══════════ TAB 2 – VOCABULARY ═══════════ -->
+<div class="tab-content" id="tab-vocab">
+  <div class="tab-page-title">
+    <div class="icon-circle" style="background:#f0ebff;">🔤</div>
+    <div><h2>Work with Words</h2><p>Vocabulary exercises – Units 17 &amp; 19</p></div>
+  </div>
+  <div class="tab-actions"><button class="reset-btn" onclick="resetTab('tab-vocab')">↺ איפוס טאב זה</button></div>
+
+  <div class="he-instr"><strong>📘 תרגיל 17א – תרגמו.</strong> מלאו את השורות הריקות — כתבו את המילה האנגלית המתאימה לכל שורה ריקה.</div>
+  <div class="section-label purple">📘 Exercise 17A – Translate</div>
+  <div class="card">
+    <div class="translate-grid">
+      <div class="translate-row"><span class="num">1.</span><span style="flex:1">around</span><span class="word-he">סביב</span><input type="text" id="v17a1" placeholder="English..."/></div>
+      <div class="translate-row"><span class="num">4.</span><span style="flex:1">community</span><span class="word-he">קהילה</span><input type="text" id="v17a4" placeholder="English..."/></div>
+      <div class="translate-row"><span class="num">2.</span><input type="text" id="v17a2" placeholder="English..."/><span class="word-he">לאסוף</span></div>
+      <div class="translate-row"><span class="num">5.</span><input type="text" id="v17a5" placeholder="English..."/><span class="word-he">מלוכלך / מטונף</span></div>
+      <div class="translate-row"><span class="num">3.</span><input type="text" id="v17a3" placeholder="English..."/><span class="word-he">למלא / מלא</span></div>
+      <div class="translate-row"><span class="num">6.</span><span style="flex:1">neighborhood</span><span class="word-he">שכונה</span><input type="text" id="v17a6" placeholder="English..."/></div>
+    </div>
+    <div style="margin-top:14px;"><button class="check-btn purple" onclick="checkTranslate17A()">Check ✓</button></div>
+    <div class="feedback" id="v17a-fb"></div>
+    <div class="answer-shown" id="v17a-show">✅ 1.around &nbsp;|&nbsp; 2.collect &nbsp;|&nbsp; 3.fill &nbsp;|&nbsp; 4.community &nbsp;|&nbsp; 5.dirty &nbsp;|&nbsp; 6.neighborhood</div>
+  </div>
+
+  <div class="he-instr"><strong>🔗 תרגיל 17ב – התאמת משפטים.</strong> חברו כל משפט מקופסה 1 למשפט המתאים מקופסה 2 שממשיך את הרעיון.</div>
+  <div class="section-label purple">🔗 Exercise 17B – Match Sentences</div>
+  <div class="card">
+    <div class="match-row"><div class="match-left">1. Please wash the cups.</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="m17b1"><option value="">Choose...</option><option value="c">c. They are dirty.</option><option value="b">b. They show your family's history.</option><option value="e">e. They are for children in need.</option><option value="d">d. Give of yourself to your community.</option><option value="a">a. Don't forget to empty your wastebasket, too.</option></select></div></div>
+    <div class="match-row"><div class="match-left">2. Fill the boxes with books.</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="m17b2"><option value="">Choose...</option><option value="c">c. They are dirty.</option><option value="b">b. They show your family's history.</option><option value="e">e. They are for children in need.</option><option value="d">d. Give of yourself to your community.</option><option value="a">a. Don't forget to empty your wastebasket, too.</option></select></div></div>
+    <div class="match-row"><div class="match-left">3. Collect old photos and old letters.</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="m17b3"><option value="">Choose...</option><option value="c">c. They are dirty.</option><option value="b">b. They show your family's history.</option><option value="e">e. They are for children in need.</option><option value="d">d. Give of yourself to your community.</option><option value="a">a. Don't forget to empty your wastebasket, too.</option></select></div></div>
+    <div class="match-row"><div class="match-left">4. Clean up your neighborhood.</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="m17b4"><option value="">Choose...</option><option value="c">c. They are dirty.</option><option value="b">b. They show your family's history.</option><option value="e">e. They are for children in need.</option><option value="d">d. Give of yourself to your community.</option><option value="a">a. Don't forget to empty your wastebasket, too.</option></select></div></div>
+    <div class="match-row"><div class="match-left">5. Take out the garbage.</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="m17b5"><option value="">Choose...</option><option value="c">c. They are dirty.</option><option value="b">b. They show your family's history.</option><option value="e">e. They are for children in need.</option><option value="d">d. Give of yourself to your community.</option><option value="a">a. Don't forget to empty your wastebasket, too.</option></select></div></div>
+    <div style="margin-top:14px;"><button class="check-btn purple" onclick="checkMatch17B()">Check ✓</button></div>
+    <div class="feedback" id="m17b-fb"></div>
+    <div class="answer-shown" id="m17b-show">✅ 1→c &nbsp;|&nbsp; 2→e &nbsp;|&nbsp; 3→b &nbsp;|&nbsp; 4→d &nbsp;|&nbsp; 5→a</div>
+  </div>
+
+  <div class="he-instr"><strong>🔵 תרגיל 17ג – הקיפו את המילה הנכונה.</strong> לחצו על המילה הנכונה בכל משפט. לכל משפט יש בחירה אחת (או שתיים לפי הנדרש).</div>
+  <div class="section-label purple">🔵 Exercise 17C – Circle the Correct Word</div>
+  <div class="card">
+    <div class="circle-sentence"><span class="num">1.</span> I am standing in the <span class="word-choice" data-q="c17c1" data-val="center" onclick="selectChoice(this,'c17c1')">center</span> / <span class="word-choice" data-q="c17c1" data-val="carpet" onclick="selectChoice(this,'c17c1')">carpet</span> of the room. My friends are standing <span class="word-choice" data-q="c17c2" data-val="above" onclick="selectChoice(this,'c17c2')">above</span> / <span class="word-choice" data-q="c17c2" data-val="around" onclick="selectChoice(this,'c17c2')">around</span> me.</div>
+    <div class="circle-sentence"><span class="num">2.</span> The houses in this <span class="word-choice" data-q="c17c3" data-val="playground" onclick="selectChoice(this,'c17c3')">playground</span> / <span class="word-choice" data-q="c17c3" data-val="neighborhood" onclick="selectChoice(this,'c17c3')">neighborhood</span> are very expensive.</div>
+    <div class="circle-sentence"><span class="num">3.</span> Some people <span class="word-choice" data-q="c17c4" data-val="collect" onclick="selectChoice(this,'c17c4')">collect</span> / <span class="word-choice" data-q="c17c4" data-val="visit" onclick="selectChoice(this,'c17c4')">visit</span> old clocks. I know a man who has 52 different clocks.</div>
+    <div class="circle-sentence"><span class="num">4.</span> <span class="word-choice" data-q="c17c5" data-val="Plant" onclick="selectChoice(this,'c17c5')">Plant</span> / <span class="word-choice" data-q="c17c5" data-val="Fill" onclick="selectChoice(this,'c17c5')">Fill</span> a tree! Make the world green.</div>
+    <div class="circle-sentence"><span class="num">5.</span> Plastic bags <span class="word-choice" data-q="c17c6" data-val="clean up" onclick="selectChoice(this,'c17c6')">clean up</span> / <span class="word-choice" data-q="c17c6" data-val="fill" onclick="selectChoice(this,'c17c6')">fill</span> the world with garbage.</div>
+    <div style="margin-top:14px;"><button class="check-btn purple" onclick="checkCircle17C()">Check ✓</button></div>
+    <div class="feedback" id="c17c-fb"></div>
+    <div class="answer-shown" id="c17c-show">✅ 1.center/around &nbsp;|&nbsp; 2.neighborhood &nbsp;|&nbsp; 3.collect &nbsp;|&nbsp; 4.Plant &nbsp;|&nbsp; 5.fill</div>
+  </div>
+
+  <div class="he-instr"><strong>📘 תרגיל 19א – תרגמו.</strong> בשורות הריקות כתבו את המילה האנגלית המתאימה (לפי הפירוש בעברית שלצד כל שורה).</div>
+  <div class="section-label green">📘 Exercise 19A – Translate</div>
+  <div class="card">
+    <div class="translate-grid">
+      <div class="translate-row"><span class="num">1.</span><span style="flex:1">a few</span><span class="word-he">כמה, מספר קטן</span><input type="text" id="v19a1" placeholder="Hebrew..."/></div>
+      <div class="translate-row"><span class="num">6.</span><input type="text" id="v19a6" placeholder="English..."/><span class="word-he">סביבה / ביטה</span></div>
+      <div class="translate-row"><span class="num">2.</span><span style="flex:1">(to) throw away</span><span class="word-he">להשליך</span><input type="text" id="v19a2" placeholder="Hebrew..."/></div>
+      <div class="translate-row"><span class="num">7.</span><input type="text" id="v19a7" placeholder="English..."/><span class="word-he">להגן על</span></div>
+      <div class="translate-row"><span class="num">3.</span><input type="text" id="v19a3" placeholder="English..."/><span class="word-he">חשמל</span></div>
+      <div class="translate-row"><span class="num">8.</span><span style="flex:1">(to) save</span><span class="word-he">לחסוך / להציל</span><input type="text" id="v19a8" placeholder="Hebrew..."/></div>
+      <div class="translate-row"><span class="num">4.</span><input type="text" id="v19a4" placeholder="English..."/><span class="word-he">ריאיון / מפגחה</span></div>
+      <div class="translate-row"><span class="num">9.</span><span style="flex:1">(a) reporter</span><span class="word-he">כתב/ת</span><input type="text" id="v19a9" placeholder="Hebrew..."/></div>
+      <div class="translate-row"><span class="num">5.</span><span style="flex:1">(to) take a shower</span><span class="word-he">להתקלח</span><input type="text" id="v19a5" placeholder="Hebrew..."/></div>
+      <div class="translate-row"><span class="num">10.</span><input type="text" id="v19a10" placeholder="English..."/><span class="word-he">חדר רחצה</span></div>
+    </div>
+    <div style="margin-top:14px;"><button class="check-btn green" onclick="checkTranslate19A()">Check ✓</button></div>
+    <div class="feedback" id="v19a-fb"></div>
+    <div class="answer-shown" id="v19a-show">✅ 1.a few &nbsp;|&nbsp; 2.throw away &nbsp;|&nbsp; 3.electricity &nbsp;|&nbsp; 4.interview &nbsp;|&nbsp; 5.take a shower &nbsp;|&nbsp; 6.environment &nbsp;|&nbsp; 7.protect &nbsp;|&nbsp; 8.save &nbsp;|&nbsp; 9.reporter &nbsp;|&nbsp; 10.bathroom</div>
+  </div>
+
+  <div class="he-instr"><strong>✏️ תרגיל 19ב – השלימו.</strong> מלאו כל משפט במילה המתאימה מתיבת המילים. שימו לב — כל מילה מופיעה פעם אחת בלבד.</div>
+  <div class="section-label green">✏️ Exercise 19B – Complete the Sentences</div>
+  <div class="card">
+    <div class="word-bank">
+      <div class="word-bank-title">📦 Word Bank – תיבת מילים</div>
+      <div class="word-bank-items">
+        <span class="word-chip">a few</span><span class="word-chip">electricity</span><span class="word-chip">protects</span><span class="word-chip">reporter</span><span class="word-chip">save</span><span class="word-chip">take a shower</span>
+      </div>
+    </div>
+    <div class="fill-sentence"><span class="num">1.</span> A hat <input type="text" id="wb1" placeholder="..."> your head from the hot sun.</div>
+    <div class="fill-sentence"><span class="num">2.</span> A microwave oven works on <input type="text" id="wb2" placeholder="...">.</div>
+    <div class="fill-sentence"><span class="num">3.</span> <input type="text" id="wb3" placeholder="..."> the world from tons of garbage! <em style="font-size:.8rem;color:var(--muted)">(Capital letter!)</em></div>
+    <div class="fill-sentence"><span class="num">4.</span> After I exercise, I <input type="text" id="wb4" placeholder="..."> and put on a clean T-shirt.</div>
+    <div class="fill-sentence"><span class="num">5.</span> That <input type="text" id="wb5" placeholder="..."> writes for the community online magazine.</div>
+    <div class="fill-sentence"><span class="num">6.</span> Can I ask you <input type="text" id="wb6" placeholder="..."> questions?</div>
+    <div style="margin-top:14px;"><button class="check-btn green" onclick="checkWordBank()">Check ✓</button></div>
+    <div class="feedback" id="wb-fb"></div>
+    <div class="answer-shown" id="wb-show">✅ 1.protects &nbsp;|&nbsp; 2.electricity &nbsp;|&nbsp; 3.Save &nbsp;|&nbsp; 4.take a shower &nbsp;|&nbsp; 5.reporter &nbsp;|&nbsp; 6.a few</div>
+  </div>
+
+  <div class="he-instr"><strong>🌿 התאמה – התאימו כל פועל בעמודה A למושא המתאים בעמודה B.</strong></div>
+  <div class="section-label green">🌿 Match Column A with Column B</div>
+  <div class="card">
+    <div class="match-row"><div class="match-left">1. 🌳 Plant</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="mab1"><option value="">Choose...</option><option value="e">e. a few trees.</option><option value="c">c. the environment.</option><option value="a">a. electricity.</option><option value="b">b. a short shower.</option><option value="d">d. empty cans.</option></select></div></div>
+    <div class="match-row"><div class="match-left">2. ♻️ Protect</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="mab2"><option value="">Choose...</option><option value="e">e. a few trees.</option><option value="c">c. the environment.</option><option value="a">a. electricity.</option><option value="b">b. a short shower.</option><option value="d">d. empty cans.</option></select></div></div>
+    <div class="match-row"><div class="match-left">3. 💡 Save</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="mab3"><option value="">Choose...</option><option value="e">e. a few trees.</option><option value="c">c. the environment.</option><option value="a">a. electricity.</option><option value="b">b. a short shower.</option><option value="d">d. empty cans.</option></select></div></div>
+    <div class="match-row"><div class="match-left">4. 🚿 Take</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="mab4"><option value="">Choose...</option><option value="e">e. a few trees.</option><option value="c">c. the environment.</option><option value="a">a. electricity.</option><option value="b">b. a short shower.</option><option value="d">d. empty cans.</option></select></div></div>
+    <div class="match-row"><div class="match-left">5. 🗑️ Don't throw away</div><div class="match-arrow">→</div><div class="match-right"><select class="match-select" id="mab5"><option value="">Choose...</option><option value="e">e. a few trees.</option><option value="c">c. the environment.</option><option value="a">a. electricity.</option><option value="b">b. a short shower.</option><option value="d">d. empty cans.</option></select></div></div>
+    <div style="margin-top:14px;"><button class="check-btn green" onclick="checkMatchAB()">Check ✓</button></div>
+    <div class="feedback" id="mab-fb"></div>
+    <div class="answer-shown" id="mab-show">✅ 1→e &nbsp;|&nbsp; 2→c &nbsp;|&nbsp; 3→a &nbsp;|&nbsp; 4→b &nbsp;|&nbsp; 5→d</div>
+  </div>
+</div><!-- end tab-vocab -->
+
+
+<!-- ═══════════ TAB 3 – READING 2 ═══════════ -->
+<div class="tab-content" id="tab-reading2">
+  <div class="tab-page-title">
+    <div class="icon-circle" style="background:#e8f7f3;">🐦</div>
+    <div><h2>The Legend of the Hummingbird</h2><p>by Pierre Rabhi – Read and answer.</p></div>
+  </div>
+  <div class="tab-actions"><button class="reset-btn" onclick="resetTab('tab-reading2')">↺ איפוס טאב זה</button></div>
+
+  <div class="reading-box" style="border-color:var(--green);">
+    <h3 style="color:var(--green);border-bottom-color:var(--green);">The Legend of the Hummingbird</h3>
+    <div class="part-title" style="font-style:italic;">by Pierre Rabhi</div>
+    <p>The animals were in the <span class="gloss" data-tip="יער">forest</span>. The forest was their home.</p>
+    <p>Suddenly, a fire <span class="gloss" data-tip="פרצה, התחילה">broke out</span> in the forest. The animals were afraid, but there was nothing they could do to stop the fire.</p>
+    <p>A little hummingbird had an idea. "Water! I'll bring water to stop the fire," the bird thought.</p>
+    <p>Quickly, the little bird flew to the <span class="gloss" data-tip="מעיין / ינבוע">spring</span>, picked up a <span class="gloss" data-tip="טיפת מים">drop of water</span> in its <span class="gloss" data-tip="מקור של ציפור">beak</span>, flew back and threw the drop of water on the fire.</p>
+    <p>Again and again, the bird flew to the spring, brought drops of water and threw them on the fire.</p>
+    <p>"What are you doing?" the animals asked. "You can't stop the fire with these drops of water!"</p>
+    <p>"I know", the bird said, "but <span class="gloss" data-tip="אני עושה את חלקי">I'm doing my part</span>."</p>
+  </div>
+
+  <div class="he-instr"><strong>✏️ א – ענו על השאלות שמהצד.</strong> כתבו תשובה מלאה לכל שאלה. השתמשו בלשון עבר.</div>
+  <div class="section-label green">✏️ A – Answer the Questions</div>
+  <div class="card">
+    <div id="r2q1" class="question-block">
+      <div class="question-text"><span class="question-num green">1</span>What happened in the forest?</div>
+      <textarea class="answer-field" id="r2q1-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q1-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q1','fire|broke out|fire broke out|fire started',1)">Check ✓</button>
+      <div class="feedback" id="r2q1-fb"></div>
+      <div class="answer-shown" id="r2q1-show">✅ A fire broke out in the forest.</div>
+    </div>
+    <div id="r2q2" class="question-block">
+      <div class="question-text"><span class="question-num green">2</span>What was the bird's idea?</div>
+      <textarea class="answer-field" id="r2q2-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q2-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q2','bring water|water|stop the fire with water',1)">Check ✓</button>
+      <div class="feedback" id="r2q2-fb"></div>
+      <div class="answer-shown" id="r2q2-show">✅ The bird's idea was to bring water to stop the fire.</div>
+    </div>
+    <div id="r2q3" class="question-block">
+      <div class="question-text"><span class="question-num green">3</span>What did the bird throw on the fire?</div>
+      <textarea class="answer-field" id="r2q3-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q3-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q3','drop of water|drops of water|water',1)">Check ✓</button>
+      <div class="feedback" id="r2q3-fb"></div>
+      <div class="answer-shown" id="r2q3-show">✅ The bird threw drops of water on the fire.</div>
+    </div>
+    <div id="r2q4" class="question-block">
+      <div class="question-text"><span class="question-num green">4</span>What did the animals tell the bird?</div>
+      <textarea class="answer-field" id="r2q4-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q4-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q4','can\'t stop|cannot stop|drops can\'t|you can\'t',1)">Check ✓</button>
+      <div class="feedback" id="r2q4-fb"></div>
+      <div class="answer-shown" id="r2q4-show">✅ The animals told the bird it can't stop the fire with drops of water.</div>
+    </div>
+    <div id="r2q5" class="question-block">
+      <div class="question-text"><span class="question-num green">5</span>What did the bird say?</div>
+      <textarea class="answer-field" id="r2q5-ans" placeholder="Write your answer here..." rows="2"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q5-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q5','doing my part|i know|my part',1)">Check ✓</button>
+      <div class="feedback" id="r2q5-fb"></div>
+      <div class="answer-shown" id="r2q5-show">✅ The bird said "I know, but I'm doing my part."</div>
+    </div>
+  </div>
+
+  <div class="he-instr"><strong>🎯 ב – בחרו את התשובה הנכונה.</strong> מה המסר (הלקח) של הסיפור? בחרו את האפשרות הנכונה ביותר.</div>
+  <div class="section-label green">🎯 B – Choose the Correct Answer</div>
+  <div class="card">
+    <p style="font-weight:700;margin-bottom:12px;">The lesson of the story is:</p>
+    <div class="mc-options" id="mc-lesson">
+      <label class="mc-option" onclick="selectMC('mc-lesson','i')"><input type="radio" name="lesson" value="i"> (i) Even a few drops of water can stop a fire.</label>
+      <label class="mc-option" onclick="selectMC('mc-lesson','ii')"><input type="radio" name="lesson" value="ii"> (ii) Everyone can and should do <em>something</em> to protect the environment.</label>
+      <label class="mc-option" onclick="selectMC('mc-lesson','iii')"><input type="radio" name="lesson" value="iii"> (iii) It is important to stop forest fires.</label>
+    </div>
+    <div style="margin-top:12px;"><button class="check-btn green" onclick="checkMC('mc-lesson','ii','r2mc1')">Check ✓</button></div>
+    <div class="feedback" id="r2mc1-fb"></div>
+    <div class="answer-shown" id="r2mc1-show">✅ (ii) Everyone can and should do something to protect the environment.</div>
+    <div class="attempt-indicator" style="margin-top:4px;">Attempts left: <span id="r2mc1-att">2</span></div>
+  </div>
+
+  <div class="he-instr"><strong>💬 ג – איזה פתגם מתאים לסיפור?</strong> בחרו את הפתגם המתאים ביותר. פתגם = משפט חכם המסכם לקח.</div>
+  <div class="section-label green">💬 C – Which Proverb Fits?</div>
+  <div class="card">
+    <p style="font-weight:700;margin-bottom:12px;">Which of the following proverbs is suitable for this story?<br><span style="font-size:.82rem;font-weight:400;color:var(--muted);">איזה מהפתגמים מתאים לסיפור?</span></p>
+    <div class="mc-options" id="mc-proverb">
+      <label class="mc-option" onclick="selectMC('mc-proverb','i')"><input type="radio" name="proverb" value="i"> (i) <strong>Every little bit helps.</strong></label>
+      <label class="mc-option" onclick="selectMC('mc-proverb','ii')"><input type="radio" name="proverb" value="ii"> (ii) <strong>Better late than never.</strong></label>
+      <label class="mc-option" onclick="selectMC('mc-proverb','iii')"><input type="radio" name="proverb" value="iii"> (iii) <strong>Don't play with fire.</strong></label>
+    </div>
+    <div style="margin-top:12px;"><button class="check-btn green" onclick="checkMC('mc-proverb','i','r2mc2')">Check ✓</button></div>
+    <div class="feedback" id="r2mc2-fb"></div>
+    <div class="answer-shown" id="r2mc2-show">✅ (i) Every little bit helps.</div>
+    <div class="attempt-indicator" style="margin-top:4px;">Attempts left: <span id="r2mc2-att">2</span></div>
+  </div>
+
+  <div class="he-instr"><strong>🤔 ד – חשבו וכתבו.</strong> מה הקשר בין מה שעשה הציפור לבין מה שעשו המתבגרים במאמר "Helpful Teenagers"? כתבו לפחות משפט אחד.</div>
+  <div class="section-label green">🤔 D – Think and Write</div>
+  <div class="card">
+    <div id="r2q6" class="question-block">
+      <div class="question-text"><span class="question-num green">D</span>What is the connection between what the bird did and what the teenagers in "Helpful Teenagers" did?</div>
+      <textarea class="answer-field" id="r2q6-ans" placeholder="Write your answer here..." rows="3"></textarea>
+      <div class="attempt-indicator">Attempts left: <span id="r2q6-att">2</span></div>
+      <button class="check-btn green" onclick="checkOpen('r2q6','help|doing their part|doing something|community|others|small actions|better place',1)">Check ✓</button>
+      <div class="feedback" id="r2q6-fb"></div>
+      <div class="answer-shown" id="r2q6-show">✅ Both the bird and the teenagers tried to help / do their part to make the world a better place.</div>
+    </div>
+  </div>
+</div><!-- end tab-reading2 -->
+
+
+<!-- ═══════════ TAB 4 – DIGITAL TASKS ═══════════ -->
+<div class="tab-content" id="tab-hw">
+  <div class="tab-page-title">
+    <div class="icon-circle" style="background:#fff8e8;">🏠</div>
+    <div><h2>Digital Tasks – Homework</h2><p>בחרו משימה אחת ושלחו ישירות למורה</p></div>
+  </div>
+
+  <div style="background:#fff8e8;border:2px solid var(--amber);border-radius:12px;padding:16px 20px;margin-bottom:24px;font-size:.9rem;font-weight:600;color:#7a5200;">
+    ⚠️ <strong>Note:</strong> These tasks are <strong>homework</strong> — <strong>not</strong> included in your score. Choose ONE and send to your teacher using the form below.<br>
+    <span style="direction:rtl;display:block;margin-top:6px;font-family:'Heebo',sans-serif;font-weight:400;">שימו לב: המשימות הן <strong>עבודת בית</strong> ואינן נכללות בציון. בחרו <strong>משימה אחת</strong> ושלחו אותה <strong>ישירות למורה</strong> דרך הטופס למטה.</span>
+  </div>
+
+  <div class="hw-task">
+    <div class="hw-task-num">📷 Task 1</div>
+    <div class="hw-badge">👥 Individual / Group</div>
+    <h3>Find Pictures of Family Activities</h3>
+    <p>Go to the Internet. Find <strong>THREE pictures</strong> of activities that bring family members together. Write <strong>a sentence for each picture</strong>.</p>
+    <p style="margin-top:10px;direction:rtl;font-size:.85rem;color:#7a5200;background:#fdf6e8;padding:8px 10px;border-radius:8px;font-family:'Heebo',sans-serif;">מצאו באינטרנט שלוש תמונות של פעילויות משפחתיות. כתבו משפט לכל תמונה. שלחו למורה דרך הטופס.</p>
+  </div>
+
+  <div class="or-divider">— OR —</div>
+
+  <div class="hw-task">
+    <div class="hw-task-num coral">⭐ Task 2</div>
+    <div class="hw-badge">⭐ Recommended</div>
+    <h3>Tips to Make Your Neighborhood a Better Place</h3>
+    <p>Write <strong>FOUR tips</strong> on how to make your neighborhood a better place. Use pages 70–72 for help. Find <strong>pictures that illustrate your tips</strong>.</p>
+    <p style="margin-top:10px;direction:rtl;font-size:.85rem;color:#7a5200;background:#fdf6e8;padding:8px 10px;border-radius:8px;font-family:'Heebo',sans-serif;">כתבו ארבעה טיפים על כיצד להפוך את שכונתכם למקום טוב יותר. היעזרו בעמודים 70–72. מצאו תמונות לכל טיפ. שלחו למורה דרך הטופס.</p>
+  </div>
+
+  <!-- SEND TO TEACHER FORM -->
+  <div class="submit-section">
+    <h3>📨 Send Your Work to the Teacher &nbsp;|&nbsp; שלח למורה</h3>
+    <p class="sub-desc">Fill in all the fields below and click "Send". Your work will open in your email app ready to send directly to the teacher.</p>
+    <div class="he-note">מלאו את כל השדות ולחצו "שלח". העבודה תיפתח בתוכנת המייל שלכם מוכנה לשליחה ישירה למורה.</div>
+
+    <div class="form-row">
+      <label>Your Full Name / שם מלא</label>
+      <input type="text" id="hw-name" placeholder="First and last name..." />
+    </div>
+    <div class="form-row">
+      <label>Your Email / המייל שלך (optional)</label>
+      <input type="email" id="hw-email" placeholder="your@email.com" />
+    </div>
+    <div class="form-row">
+      <label>Which task? / איזו משימה?</label>
+      <select id="hw-task-choice">
+        <option value="">-- Choose / בחר --</option>
+        <option value="Task 1 – Family Activities">📷 Task 1 – Family Activities</option>
+        <option value="Task 2 – Neighborhood Tips">⭐ Task 2 – Neighborhood Tips</option>
+      </select>
+    </div>
+    <div class="form-row">
+      <label>Your Work / העבודה שלך — write, or paste a link to your doc/images</label>
+      <textarea id="hw-work" placeholder="Write your sentences / tips here, or paste a link to your Google Doc / shared folder..."></textarea>
+    </div>
+    <button class="send-btn" onclick="sendHomework()">📨 Send to Teacher &nbsp;|&nbsp; שלח למורה</button>
+    <div class="send-success" id="send-success">✅ Your email app should open now — just press Send! &nbsp;|&nbsp; תוכנת המייל נפתחה — לחצו שלח!</div>
+  </div>
+</div><!-- end tab-hw -->
+
+
+<script>
+// ═══ CONFIG — change to your email ═══
+const TEACHER_EMAIL = 'teacher@school.edu'; // ← שנה לכתובת המייל שלך כאן
+
+// ═══ STORAGE & SCORE (raw 0–50 → displayed ×2 = 0–100) ═══
+const STORAGE_KEY = 'icare_unit3_g9_v3';
+let state = {};
+let rawScore = 0;
+const scoredItems = {};
+
+function loadState(){try{const s=localStorage.getItem(STORAGE_KEY);if(s)state=JSON.parse(s);}catch(e){state={};}}
+function saveState(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify(state));}catch(e){}}
+function updateScoreDisplay(){document.getElementById('total-score').textContent=Math.round(rawScore*2);}
+function registerItem(id,pts){if(!scoredItems[id])scoredItems[id]={pts,earned:0};}
+function awardPoints(id,pts){if(scoredItems[id]&&scoredItems[id].earned<pts){rawScore+=(pts-scoredItems[id].earned);scoredItems[id].earned=pts;updateScoreDisplay();}}
+
+// ═══ TABS ═══
+function switchTab(id,btn){
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  btn.classList.add('active');
+}
+
+// ═══ ATTEMPTS ═══
+function getAttempts(id){return state[id+'_att']!==undefined?state[id+'_att']:2;}
+function useAttempt(id){let a=getAttempts(id);if(a>0)a--;state[id+'_att']=a;const el=document.getElementById(id+'-att');if(el)el.textContent=a;saveState();return a;}
+function isLocked(id){return getAttempts(id)===0;}
+
+// ═══ OPEN QUESTIONS ═══
+function checkOpen(id,keywords,pts){
+  registerItem(id,pts);if(isLocked(id))return;
+  const ans=(document.getElementById(id+'-ans').value||'').toLowerCase().trim();
+  const fb=document.getElementById(id+'-fb');const show=document.getElementById(id+'-show');
+  if(!ans){fb.className='feedback warning';fb.textContent='⚠️ Please write an answer first!';return;}
+  const ok=keywords.split('|').some(kw=>ans.includes(kw.toLowerCase()));
+  const left=useAttempt(id);
+  if(ok){fb.className='feedback correct';fb.textContent='✅ Great answer!';awardPoints(id,pts);lockField(id);}
+  else if(left===0){fb.className='feedback wrong';fb.textContent='❌ No more attempts.';if(show)show.classList.add('show');lockField(id);}
+  else{fb.className='feedback wrong';fb.textContent=`❌ Try again! Check the text. (${left} left)`;}
+}
+function lockField(id){const f=document.getElementById(id+'-ans');if(f)f.disabled=true;const b=document.querySelector(`[onclick*="'${id}'"]`);if(b)b.disabled=true;}
+
+// ═══ MC ═══
+const mcState={};
+function selectMC(gid,val){if(mcState[gid+'_locked'])return;mcState[gid+'_sel']=val;document.querySelectorAll(`#${gid} .mc-option`).forEach(el=>el.classList.toggle('selected',el.querySelector('input').value===val));}
+function checkMC(gid,correctVal,resId){
+  registerItem(resId,1);if(isLocked(resId))return;
+  const sel=mcState[gid+'_sel'];const fb=document.getElementById(resId+'-fb');const show=document.getElementById(resId+'-show');
+  if(!sel){fb.className='feedback warning';fb.textContent='⚠️ Please choose an answer!';return;}
+  const left=useAttempt(resId);
+  if(sel===correctVal){
+    fb.className='feedback correct';fb.textContent='✅ Correct!';awardPoints(resId,1);
+    document.querySelectorAll(`#${gid} .mc-option`).forEach(el=>{el.classList.add('locked');if(el.querySelector('input').value===correctVal)el.classList.add('correct-ans');});
+    mcState[gid+'_locked']=true;
+  }else if(left===0){
+    fb.className='feedback wrong';fb.textContent='❌ No more attempts.';if(show)show.classList.add('show');
+    document.querySelectorAll(`#${gid} .mc-option`).forEach(el=>{el.classList.add('locked');const v=el.querySelector('input').value;if(v===correctVal)el.classList.add('correct-ans');else if(v===sel)el.classList.add('wrong-ans');});
+    mcState[gid+'_locked']=true;
+  }else{fb.className='feedback wrong';fb.textContent=`❌ Try again! (${left} left)`;}
+}
+
+// ═══ CIRCLE WORD ═══
+const circleSelected={};
+function selectChoice(el,qid){if(el.classList.contains('locked'))return;document.querySelectorAll(`[data-q="${qid}"]`).forEach(s=>s.classList.remove('selected'));el.classList.add('selected');circleSelected[qid]=el.dataset.val;}
+function checkCircle17C(){
+  registerItem('c17c',5);if(isLocked('c17c'))return;
+  const correct={c17c1:'center',c17c2:'around',c17c3:'neighborhood',c17c4:'collect',c17c5:'Plant',c17c6:'fill'};
+  let score=0,answered=true;
+  for(const[qid,ans]of Object.entries(correct)){if(!circleSelected[qid]){answered=false;break;}if(circleSelected[qid].toLowerCase()===ans.toLowerCase())score++;}
+  if(!answered){document.getElementById('c17c-fb').className='feedback warning';document.getElementById('c17c-fb').textContent='⚠️ Select all answers first!';return;}
+  const left=useAttempt('c17c'),total=Object.keys(correct).length;
+  if(score===total){document.getElementById('c17c-fb').className='feedback correct';document.getElementById('c17c-fb').textContent=`✅ Perfect! ${score}/${total}`;awardPoints('c17c',5);lockCircle17C(correct);}
+  else if(left===0){document.getElementById('c17c-fb').className='feedback wrong';document.getElementById('c17c-fb').textContent=`❌ No more attempts. ${score}/${total} correct.`;document.getElementById('c17c-show').classList.add('show');lockCircle17C(correct);}
+  else{document.getElementById('c17c-fb').className='feedback wrong';document.getElementById('c17c-fb').textContent=`❌ ${score}/${total} correct. Try again! (${left} left)`;}
+}
+function lockCircle17C(correct){document.querySelectorAll('.word-choice').forEach(el=>{el.classList.add('locked');const ans=correct[el.dataset.q];if(ans&&el.dataset.val.toLowerCase()===ans.toLowerCase())el.classList.add('correct-choice');else if(el.classList.contains('selected'))el.classList.add('wrong-choice');});}
+
+// ═══ TRANSLATE 17A ═══
+function checkTranslate17A(){
+  registerItem('v17a',4);if(isLocked('v17a'))return;
+  const toCheck={v17a2:'collect',v17a3:'fill',v17a5:'dirty'};
+  let score=0,all=true;
+  for(const[id,ans]of Object.entries(toCheck)){const v=(document.getElementById(id).value||'').toLowerCase().trim();if(!v){all=false;break;}if(v===ans||levenshtein(v,ans)<=1)score++;}
+  if(!all){document.getElementById('v17a-fb').className='feedback warning';document.getElementById('v17a-fb').textContent='⚠️ Fill in all the blanks!';return;}
+  const left=useAttempt('v17a');
+  if(score===3){document.getElementById('v17a-fb').className='feedback correct';document.getElementById('v17a-fb').textContent=`✅ Well done! ${score}/3`;awardPoints('v17a',4);Object.keys(toCheck).forEach(id=>document.getElementById(id).disabled=true);}
+  else if(left===0){document.getElementById('v17a-fb').className='feedback wrong';document.getElementById('v17a-fb').textContent=`❌ No more attempts. ${score}/3 correct.`;document.getElementById('v17a-show').classList.add('show');Object.keys(toCheck).forEach(id=>document.getElementById(id).disabled=true);}
+  else{document.getElementById('v17a-fb').className='feedback wrong';document.getElementById('v17a-fb').textContent=`❌ ${score}/3 correct. Try again! (${left} left)`;}
+}
+
+// ═══ TRANSLATE 19A ═══
+function checkTranslate19A(){
+  registerItem('v19a',6);if(isLocked('v19a'))return;
+  const toCheck={v19a3:'electricity',v19a4:'interview',v19a6:'environment',v19a7:'protect',v19a10:'bathroom'};
+  let score=0,all=true;
+  for(const[id,ans]of Object.entries(toCheck)){const v=(document.getElementById(id).value||'').toLowerCase().trim();if(!v){all=false;break;}if(v===ans||levenshtein(v,ans)<=2)score++;}
+  if(!all){document.getElementById('v19a-fb').className='feedback warning';document.getElementById('v19a-fb').textContent='⚠️ Fill in all the blanks!';return;}
+  const left=useAttempt('v19a'),total=Object.keys(toCheck).length;
+  if(score===total){document.getElementById('v19a-fb').className='feedback correct';document.getElementById('v19a-fb').textContent=`✅ Excellent! ${score}/${total}`;awardPoints('v19a',6);Object.keys(toCheck).forEach(id=>document.getElementById(id).disabled=true);}
+  else if(left===0){document.getElementById('v19a-fb').className='feedback wrong';document.getElementById('v19a-fb').textContent=`❌ No more attempts. ${score}/${total} correct.`;document.getElementById('v19a-show').classList.add('show');Object.keys(toCheck).forEach(id=>document.getElementById(id).disabled=true);}
+  else{document.getElementById('v19a-fb').className='feedback wrong';document.getElementById('v19a-fb').textContent=`❌ ${score}/${total} correct. Try again! (${left} left)`;}
+}
+
+// ═══ MATCH 17B ═══
+function checkMatch17B(){
+  registerItem('m17b',5);if(isLocked('m17b'))return;
+  const correct={m17b1:'c',m17b2:'e',m17b3:'b',m17b4:'d',m17b5:'a'};
+  let score=0,all=true;
+  for(const[id,ans]of Object.entries(correct)){const v=document.getElementById(id).value;if(!v){all=false;break;}if(v===ans)score++;}
+  if(!all){document.getElementById('m17b-fb').className='feedback warning';document.getElementById('m17b-fb').textContent='⚠️ Match all sentences first!';return;}
+  const left=useAttempt('m17b');
+  if(score===5){document.getElementById('m17b-fb').className='feedback correct';document.getElementById('m17b-fb').textContent='✅ Perfect! All 5 correct.';awardPoints('m17b',5);Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else if(left===0){document.getElementById('m17b-fb').className='feedback wrong';document.getElementById('m17b-fb').textContent=`❌ No more attempts. ${score}/5 correct.`;document.getElementById('m17b-show').classList.add('show');Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else{document.getElementById('m17b-fb').className='feedback wrong';document.getElementById('m17b-fb').textContent=`❌ ${score}/5 correct. Try again! (${left} left)`;}
+}
+
+// ═══ MATCH A–B ═══
+function checkMatchAB(){
+  registerItem('mab',5);if(isLocked('mab'))return;
+  const correct={mab1:'e',mab2:'c',mab3:'a',mab4:'b',mab5:'d'};
+  let score=0,all=true;
+  for(const[id,ans]of Object.entries(correct)){const v=document.getElementById(id).value;if(!v){all=false;break;}if(v===ans)score++;}
+  if(!all){document.getElementById('mab-fb').className='feedback warning';document.getElementById('mab-fb').textContent='⚠️ Complete all matches!';return;}
+  const left=useAttempt('mab');
+  if(score===5){document.getElementById('mab-fb').className='feedback correct';document.getElementById('mab-fb').textContent='✅ All 5 correct!';awardPoints('mab',5);Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else if(left===0){document.getElementById('mab-fb').className='feedback wrong';document.getElementById('mab-fb').textContent=`❌ No more attempts. ${score}/5 correct.`;document.getElementById('mab-show').classList.add('show');Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else{document.getElementById('mab-fb').className='feedback wrong';document.getElementById('mab-fb').textContent=`❌ ${score}/5 correct. Try again! (${left} left)`;}
+}
+
+// ═══ WORD BANK ═══
+function checkWordBank(){
+  registerItem('wb',6);if(isLocked('wb'))return;
+  const correct={wb1:'protects',wb2:'electricity',wb3:'save',wb4:'take a shower',wb5:'reporter',wb6:'a few'};
+  let score=0,all=true;
+  for(const[id,ans]of Object.entries(correct)){const v=(document.getElementById(id).value||'').toLowerCase().trim();if(!v){all=false;break;}if(v===ans||levenshtein(v,ans)<=2)score++;}
+  if(!all){document.getElementById('wb-fb').className='feedback warning';document.getElementById('wb-fb').textContent='⚠️ Fill in all the blanks!';return;}
+  const left=useAttempt('wb');
+  if(score===6){document.getElementById('wb-fb').className='feedback correct';document.getElementById('wb-fb').textContent='✅ Perfect! All 6 correct.';awardPoints('wb',6);Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else if(left===0){document.getElementById('wb-fb').className='feedback wrong';document.getElementById('wb-fb').textContent=`❌ No more attempts. ${score}/6 correct.`;document.getElementById('wb-show').classList.add('show');Object.keys(correct).forEach(id=>document.getElementById(id).disabled=true);}
+  else{document.getElementById('wb-fb').className='feedback wrong';document.getElementById('wb-fb').textContent=`❌ ${score}/6 correct. Try again! (${left} left)`;}
+}
+
+// ═══ SEND HOMEWORK ═══
+function sendHomework(){
+  const name=document.getElementById('hw-name').value.trim();
+  const email=document.getElementById('hw-email').value.trim();
+  const task=document.getElementById('hw-task-choice').value;
+  const work=document.getElementById('hw-work').value.trim();
+  if(!name||!task||!work){alert('Please fill in your name, choose a task, and write your work.\nנא מלאו שם, בחרו משימה וכתבו את העבודה.');return;}
+  const subject=encodeURIComponent(`[Unit 3 I Care] ${task} – ${name}`);
+  const body=encodeURIComponent(`Student: ${name}\nEmail: ${email||'not provided'}\nTask: ${task}\n\n--- Work ---\n${work}\n\n--- Score ---\n${document.getElementById('total-score').textContent}/100`);
+  window.location.href=`mailto:${TEACHER_EMAIL}?subject=${subject}&body=${body}`;
+  document.getElementById('send-success').classList.add('show');
+}
+
+// ═══ RESET TAB ═══
+function resetTab(tabId){
+  if(!confirm('Reset this tab? All answers will be cleared.\nלאפס את הטאב? כל התשובות יימחקו.'))return;
+  const tab=document.getElementById(tabId);
+  tab.querySelectorAll('textarea,input[type="text"],input[type="email"]').forEach(el=>{el.value='';el.disabled=false;});
+  tab.querySelectorAll('select').forEach(el=>{el.selectedIndex=0;el.disabled=false;});
+  tab.querySelectorAll('.feedback').forEach(el=>{el.className='feedback';el.textContent='';});
+  tab.querySelectorAll('.answer-shown').forEach(el=>el.classList.remove('show'));
+  tab.querySelectorAll('.attempt-indicator span').forEach(el=>el.textContent='2');
+  tab.querySelectorAll('.mc-option').forEach(el=>{el.className='mc-option';const i=el.querySelector('input');if(i)i.checked=false;});
+  tab.querySelectorAll('.word-choice').forEach(el=>el.className='word-choice');
+  tab.querySelectorAll('.check-btn').forEach(btn=>btn.disabled=false);
+  tab.querySelectorAll('.send-success').forEach(el=>el.classList.remove('show'));
+  // Clear state
+  const keys=[];
+  tab.querySelectorAll('[id$="-att"]').forEach(el=>keys.push(el.id.replace('-att','')));
+  ['c17c','v17a','v19a','m17b','mab','wb'].forEach(k=>{if(tab.querySelector(`[id^="${k}"]`)||tab.querySelector(`#${k}-fb`))keys.push(k);});
+  keys.forEach(k=>{delete state[k+'_att'];delete state[k+'_correct'];});
+  Object.keys(mcState).forEach(k=>delete mcState[k]);
+  Object.keys(circleSelected).forEach(k=>delete circleSelected[k]);
+  rawScore=0;Object.values(scoredItems).forEach(item=>item.earned=0);
+  updateScoreDisplay();saveState();
+}
+
+// ═══ LEVENSHTEIN ═══
+function levenshtein(a,b){const m=a.length,n=b.length;const dp=Array.from({length:m+1},(_,i)=>Array.from({length:n+1},(_,j)=>j===0?i:0));for(let j=1;j<=n;j++)dp[0][j]=j;for(let i=1;i<=m;i++)for(let j=1;j<=n;j++)dp[i][j]=a[i-1]===b[j-1]?dp[i-1][j-1]:1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);return dp[m][n];}
+
+// ═══ INIT ═══
+loadState();
+// Register all items (total raw = 50 → ×2 = 100)
+['r1q1','r1q2','r1q3','r1q4','r1q5','r1q6','r1q7','r1q8','r1q9','r1q10','r1q11','r2q1','r2q2','r2q3','r2q4','r2q5','r2q6'].forEach(id=>registerItem(id,1));
+registerItem('r2mc1',1);registerItem('r2mc2',1);
+registerItem('v17a',4);registerItem('v19a',6);
+registerItem('m17b',5);registerItem('mab',5);
+registerItem('c17c',5);registerItem('wb',6);
+// 17 open + 2 MC + 4+6+5+5+5+6 = 50 raw → ×2 = 100 ✓
+
+// Restore attempt counters
+document.querySelectorAll('[id$="-att"]').forEach(el=>{const k=el.id.replace('-att','');if(state[k+'_att']!==undefined)el.textContent=state[k+'_att'];});
+updateScoreDisplay();
+</script>
+</body>
+</html>
